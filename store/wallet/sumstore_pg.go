@@ -21,11 +21,10 @@ type summaryPgPostgres struct {
 	DB gorm.DB
 }
 
-// SaveOrUpdate saves a new entry or makes changes to an existing one.
-// If there is no entry for the specified data and time, create a entry
-// by adding the most recent balance to the provided balance.
-// If not, update the current entry by adding the provided balance to
-// the balance already present in that specific entry.
+// SaveOrUpdate saves a new entry or makes changes to an existing one. If there is no
+// entry for the specified data and time, create a entry by adding the most recent balance
+// to the provided balance. If not, update the current entry by adding the provided balance
+// to the balance already present in that specific entry.
 func (s *summaryPgPostgres) SaveOrUpdate(entry models.WalletEntry) (err error) {
 
 	// Set the balance for existing row.
