@@ -9,7 +9,7 @@ var (
 	// when date time format is invalid.
 	ErrInvalidDateTime = errors.New("invalid date time")
 
-	// ErrInvalidDateTime an error which will be returned
+	// ErrInvalidAmount an error which will be returned
 	// when amount is invalid.
 	ErrInvalidAmount = errors.New("invalid amount")
 )

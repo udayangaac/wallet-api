@@ -34,7 +34,7 @@ type MockDataSummaryStore struct {
 	}
 }
 
-// NewSummaryPgStore create a new instance of mock implementation of SummaryStore.
+// NewSummaryMockStore create a new instance of mock implementation of SummaryStore.
 func NewSummaryMockStore(data MockDataSummaryStore) SummaryStore {
 	return &summaryMockPostgres{
 		mockData: data,
