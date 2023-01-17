@@ -7,9 +7,13 @@ import (
 	"github.com/udayangaac/wallet-api/models"
 )
 
+var (
+	ErrMismatch = errors.New("mismatch between expected and given values")
+)
+
 // MockDataSummaryStore contains dummy data for testing.
-type MockDataSummaryStore struct {
-	SaveOrUpdate struct {
+type SummaryStoreMockData struct {
+	saveOrUpdate struct {
 		Params struct {
 			WalletEntry models.WalletEntry
 		}
@@ -17,7 +21,7 @@ type MockDataSummaryStore struct {
 			Err error
 		}
 	}
-	GetAll struct {
+	getAll struct {
 		Params struct {
 			FilterParams FilterParams
 		}
@@ -26,7 +30,7 @@ type MockDataSummaryStore struct {
 			Err     error
 		}
 	}
-	GetLast struct {
+	getLast struct {
 		Returns struct {
 			Entry models.WalletEntry
 			Err   error
@@ -34,15 +38,29 @@ type MockDataSummaryStore struct {
 	}
 }
 
+func NewSummaryStoreMockData() SummaryStoreMockData {
+	return SummaryStoreMockData{}
+}
+
+func (m *SummaryStoreMockData) AddToSaveOrUpdate(entry models.WalletEntry, err error) {
+	m.saveOrUpdate.Params.WalletEntry = entry
+	m.saveOrUpdate.Returns.Err = err
+}
+
+func (m *SummaryStoreMockData) AddToGetLast(entry models.WalletEntry, err error) {
+	m.getLast.Returns.Entry = entry
+	m.getLast.Returns.Err = err
+}
+
 // NewSummaryMockStore create a new instance of mock implementation of SummaryStore.
-func NewSummaryMockStore(data MockDataSummaryStore) SummaryStore {
+func NewSummaryMockStore(data SummaryStoreMockData) SummaryStore {
 	return &summaryMockPostgres{
 		mockData: data,
 	}
 }
 
 type summaryMockPostgres struct {
-	mockData MockDataSummaryStore
+	mockData SummaryStoreMockData
 }
 
 // SaveOrUpdate saves a new entry or makes changes to an existing one. If there is no
@@ -50,23 +68,23 @@ type summaryMockPostgres struct {
 // to the provided balance. If not, update the current entry by adding the provided balance
 // to the balance already present in that specific entry.
 func (s *summaryMockPostgres) SaveOrUpdate(entry models.WalletEntry) (err error) {
-	expected := s.mockData.SaveOrUpdate.Params.WalletEntry
-	if expected == entry {
-		return s.mockData.GetAll.Returns.Err
+	expected := s.mockData.saveOrUpdate.Params.WalletEntry
+	if expected.Balance == entry.Balance && expected.DateTime.Equal(entry.DateTime) {
+		return s.mockData.saveOrUpdate.Returns.Err
 	}
-	return errors.New("given WalletEntry is not equal to expected WalletEntry")
+	return ErrMismatch
 }
 
 // GetAll retrieves all wallet entries filtered given filters parameters.
 func (s *summaryMockPostgres) GetAll(params FilterParams) (entries []models.WalletEntry, err error) {
-	expected := s.mockData.GetAll.Params.FilterParams
-	if expected == params {
-		return s.mockData.GetAll.Returns.Entries, s.mockData.GetAll.Returns.Err
+	expected := s.mockData.getAll.Params.FilterParams
+	if expected.From.Equal(params.From) && expected.To.Equal(params.To) {
+		return s.mockData.getAll.Returns.Entries, s.mockData.getAll.Returns.Err
 	}
-	return []models.WalletEntry{}, errors.New("given FilterParams are not equal to expected FilterParams")
+	return []models.WalletEntry{}, ErrMismatch
 }
 
 // GetLast retrieve the last inserted wallet entry.
 func (s *summaryMockPostgres) GetLast() (entry models.WalletEntry, err error) {
-	return s.mockData.GetLast.Returns.Entry, s.mockData.GetLast.Returns.Err
+	return s.mockData.getLast.Returns.Entry, s.mockData.getLast.Returns.Err
 }
