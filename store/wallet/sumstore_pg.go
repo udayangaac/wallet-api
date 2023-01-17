@@ -62,7 +62,7 @@ func (s *summaryPgPostgres) GetAll(params FilterParams) (entries []models.Wallet
 	}
 
 	if !params.To.IsZero() {
-		tx = s.DB.Where("date_time <= ?", params.To)
+		tx = s.DB.Where("date_time < ?", params.To)
 	}
 
 	if !params.To.IsZero() && !params.From.IsZero() {
