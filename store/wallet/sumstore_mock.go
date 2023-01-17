@@ -8,10 +8,11 @@ import (
 )
 
 var (
+	// ErrMismatch will be returned in case of mismatch.
 	ErrMismatch = errors.New("mismatch between expected and given values")
 )
 
-// MockDataSummaryStore contains dummy data for testing.
+// SummaryStoreMockData contains dummy data for testing.
 type SummaryStoreMockData struct {
 	saveOrUpdate struct {
 		Params struct {
