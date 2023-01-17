@@ -55,20 +55,22 @@ func (w *Summarizer) GetHistory(from, to time.Time) ([]models.WalletEntry, error
 
 	for i := 0; i < len(dbEntries); {
 		tmp := models.WalletEntry{}
+		idx := i
+
 		for j := 0; j < numOfEntryPerRecord; j++ {
-
-			if tmp.DateTime.IsZero() {
-				tmp = dbEntries[i+j]
-			} else {
-				tmp.Balance = dbEntries[i+j].Balance
-			}
-
-			i++
-
 			if i >= len(dbEntries) {
 				break
 			}
+
+			if tmp.DateTime.IsZero() {
+				tmp = dbEntries[idx+j]
+			} else {
+				tmp.Balance = dbEntries[idx+j].Balance
+			}
+
+			i++
 		}
+
 		entries = append(entries, tmp)
 	}
 	return entries, nil
