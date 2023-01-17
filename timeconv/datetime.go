@@ -18,7 +18,7 @@ func GetNextHalfHour(t time.Time) time.Time {
 	zoneStr := t.Format(zoneFormat)
 
 	timeStr := ""
-	if t.Minute() >= 30 {
+	if t.Minute() > 30 {
 		timeStr = hourStr + "30:00" + zoneStr
 	} else {
 		timeStr = hourStr + "00:00" + zoneStr
