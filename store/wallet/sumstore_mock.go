@@ -38,18 +38,28 @@ type SummaryStoreMockData struct {
 	}
 }
 
+// NewSummaryStoreMockData creates a instance of SummaryStoreMockData.
 func NewSummaryStoreMockData() SummaryStoreMockData {
 	return SummaryStoreMockData{}
 }
 
+// AddToSaveOrUpdate adds mock data for SaveOrUpdate function.
 func (m *SummaryStoreMockData) AddToSaveOrUpdate(entry models.WalletEntry, err error) {
 	m.saveOrUpdate.Params.WalletEntry = entry
 	m.saveOrUpdate.Returns.Err = err
 }
 
+// AddToGetLast adds mock data for GetLast function.
 func (m *SummaryStoreMockData) AddToGetLast(entry models.WalletEntry, err error) {
 	m.getLast.Returns.Entry = entry
 	m.getLast.Returns.Err = err
+}
+
+// AddToGetAll adds mock data for GetAll function.
+func (m *SummaryStoreMockData) AddToGetAll(params FilterParams, entries []models.WalletEntry, err error) {
+	m.getAll.Params.FilterParams = params
+	m.getAll.Returns.Entries = entries
+	m.getAll.Returns.Err = err
 }
 
 // NewSummaryMockStore create a new instance of mock implementation of SummaryStore.
