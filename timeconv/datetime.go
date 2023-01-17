@@ -1,5 +1,5 @@
 // Package timeconv includes different date and time conversions.
-package timefmt
+package timeconv
 
 import "time"
 

@@ -1,4 +1,4 @@
-package timefmt
+package timeconv
 
 import (
 	"testing"
