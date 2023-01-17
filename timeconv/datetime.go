@@ -8,11 +8,11 @@ const (
 	zoneFormat = "Z07:00"
 )
 
-// GetPreviousHalfHour returns previous latest half an hour time.
+// GetNextHalfHour returns next half an hour time.
 // For example:
-// Arg : 2006-01-02T15:20:40+07:00 > Return: 2006-01-02T15:00:00+07:00
-// Arg : 2006-01-02T15:40:40+07:00 > Return: 2006-01-02T15:30:00+07:00
-func GetPreviousHalfHour(t time.Time) time.Time {
+// Arg : 2006-01-02T15:20:40+07:00 > Return: 2006-01-02T15:30:00+07:00
+// Arg : 2006-01-02T15:40:40+07:00 > Return: 2006-01-02T16:00:00+07:00
+func GetNextHalfHour(t time.Time) time.Time {
 
 	hourStr := t.Format(hourFormat)
 	zoneStr := t.Format(zoneFormat)
@@ -26,5 +26,9 @@ func GetPreviousHalfHour(t time.Time) time.Time {
 
 	// Error can be neglected because formats of both arguments do not change.
 	t, _ = time.Parse(time.RFC3339, timeStr)
+
+	// Add 30 min to shift the time.
+	t = t.Add(30 * time.Minute)
+
 	return t
 }
