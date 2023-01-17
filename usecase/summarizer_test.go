@@ -121,6 +121,27 @@ func TestSummarizer_GetHistory(t *testing.T) {
 				From: t1Converted,
 				To:   t2Converted,
 			},
+
+			MockEntries: []models.WalletEntry{
+				{
+					DateTime: t1Converted,
+					Balance:  20.00,
+				},
+			},
+
+			ExpectedEntries: []models.WalletEntry{
+				{
+					DateTime: t1Converted,
+					Balance:  20.00,
+				},
+			},
+		}, {
+			From: t1Converted,
+			To:   t2Converted,
+			MockParams: wallet.FilterParams{
+				From: t1Converted,
+				To:   t2Converted,
+			},
 			ExpectedErr: dummyErr,
 			MockErr:     dummyErr,
 		},

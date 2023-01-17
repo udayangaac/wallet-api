@@ -54,6 +54,7 @@ func (w *Summarizer) GetHistory(from, to time.Time) ([]models.WalletEntry, error
 	numOfEntryPerRecord := int(models.PeriodOfWalletHistory / minPeriod)
 
 	for i := 0; i < len(dbEntries); {
+
 		tmp := models.WalletEntry{}
 		idx := i
 
