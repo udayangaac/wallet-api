@@ -19,9 +19,9 @@ type SummaryStore interface {
 
 	// SaveOrUpdate saves a new entry or makes changes to an existing one. If there is no
 	// entry for the specified data and time, create a entry by adding the most recent balance
-	// to the provided balance. If not, update the current entry by adding the provided balance
+	// to the provided amount. If not, update the current entry by adding the provided amount
 	// to the balance already present in that specific entry.
-	SaveOrUpdate(entry models.WalletEntry) (err error)
+	SaveOrUpdate(txn models.WalletTxn) (err error)
 
 	// GetAll retrieves all wallet entries filtered given filters parameters.
 	GetAll(params FilterParams) (entries []models.WalletEntry, err error)

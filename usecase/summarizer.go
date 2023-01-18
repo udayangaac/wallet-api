@@ -25,11 +25,11 @@ func NewSummarizer(store wallet.SummaryStore) Summarizer {
 }
 
 // Save saves a record.
-func (w *Summarizer) Save(entry models.WalletEntry) error {
+func (w *Summarizer) Save(txn models.WalletTxn) error {
 
-	entry.DateTime = timeconv.GetNextHalfHour(entry.DateTime)
+	txn.DateTime = timeconv.GetNextHalfHour(txn.DateTime)
 
-	return w.store.SaveOrUpdate(entry)
+	return w.store.SaveOrUpdate(txn)
 }
 
 // GetHistory returns a history wallet balance at the end of each defined time periods between two date times.

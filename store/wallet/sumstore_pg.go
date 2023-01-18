@@ -23,23 +23,23 @@ type summaryPgPostgres struct {
 
 // SaveOrUpdate saves a new entry or makes changes to an existing one. If there is no
 // entry for the specified data and time, create a entry by adding the most recent balance
-// to the provided balance. If not, update the current entry by adding the provided balance
+// to the provided amount. If not, update the current entry by adding the provided amount
 // to the balance already present in that specific entry.
-func (s *summaryPgPostgres) SaveOrUpdate(entry models.WalletEntry) (err error) {
+func (s *summaryPgPostgres) SaveOrUpdate(txn models.WalletTxn) (err error) {
 
 	// Set the balance for existing row.
 	rowBal := clause.OnConflict{
 		Columns:   []clause.Column{{Name: "date_time"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{"balance": gorm.Expr("summaries.balance + ?", entry.Balance)}),
+		DoUpdates: clause.Assignments(map[string]interface{}{"balance": gorm.Expr("summaries.balance + ?", txn.Amount)}),
 	}
 
 	// Set the balance for new row.
 	newRowBal := clause.Expr{
 		SQL:  " ? + (SELECT balance FROM summaries WHERE summaries.deleted_at IS NULL ORDER BY summaries.id DESC LIMIT 1)",
-		Vars: []interface{}{entry.Balance}}
+		Vars: []interface{}{txn.Amount}}
 
 	values := map[string]interface{}{
-		"date_time":  entry.DateTime,
+		"date_time":  txn.DateTime,
 		"balance":    newRowBal,
 		"created_at": time.Now(),
 		"updated_at": time.Now(),

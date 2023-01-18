@@ -19,42 +19,42 @@ func TestSummarizer_Save(t *testing.T) {
 	dummyErr := errors.New("dummy error")
 
 	tests := []struct {
-		MockEntry, Entry     models.WalletEntry
+		MockTxn, Txn         models.WalletTxn
 		MockErr, ExpectedErr error
 	}{
 		{
-			MockEntry: models.WalletEntry{
+			MockTxn: models.WalletTxn{
 				DateTime: t1Converted,
-				Balance:  10.00,
+				Amount:   10.00,
 			},
 			MockErr: nil,
-			Entry: models.WalletEntry{
+			Txn: models.WalletTxn{
 				DateTime: t1,
-				Balance:  10.00,
+				Amount:   10.00,
 			},
 			ExpectedErr: nil,
 		},
 		{
-			MockEntry: models.WalletEntry{
+			MockTxn: models.WalletTxn{
 				DateTime: t1Converted,
-				Balance:  10.00,
+				Amount:   10.00,
 			},
 			MockErr: dummyErr,
-			Entry: models.WalletEntry{
+			Txn: models.WalletTxn{
 				DateTime: t1,
-				Balance:  10.00,
+				Amount:   10.00,
 			},
 			ExpectedErr: dummyErr,
 		},
 		{
-			MockEntry: models.WalletEntry{
+			MockTxn: models.WalletTxn{
 				DateTime: t1Converted,
-				Balance:  20.00,
+				Amount:   20.00,
 			},
 			MockErr: dummyErr,
-			Entry: models.WalletEntry{
+			Txn: models.WalletTxn{
 				DateTime: t1,
-				Balance:  10.00,
+				Amount:   10.00,
 			},
 			ExpectedErr: wallet.ErrMismatch,
 		},
@@ -63,12 +63,12 @@ func TestSummarizer_Save(t *testing.T) {
 	for _, test := range tests {
 
 		md := wallet.NewSummaryStoreMockData()
-		md.AddToSaveOrUpdate(test.MockEntry, test.MockErr)
+		md.AddToSaveOrUpdate(test.MockTxn, test.MockErr)
 
 		ms := wallet.NewSummaryMockStore(md)
 		s := NewSummarizer(ms)
 
-		actualErr := s.Save(test.Entry)
+		actualErr := s.Save(test.Txn)
 		assert.Equal(t, test.ExpectedErr, actualErr)
 	}
 

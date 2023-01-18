@@ -16,7 +16,7 @@ var (
 type SummaryStoreMockData struct {
 	saveOrUpdate struct {
 		Params struct {
-			WalletEntry models.WalletEntry
+			WalletTxn models.WalletTxn
 		}
 		Returns struct {
 			Err error
@@ -45,8 +45,8 @@ func NewSummaryStoreMockData() SummaryStoreMockData {
 }
 
 // AddToSaveOrUpdate adds mock data for SaveOrUpdate function.
-func (m *SummaryStoreMockData) AddToSaveOrUpdate(entry models.WalletEntry, err error) {
-	m.saveOrUpdate.Params.WalletEntry = entry
+func (m *SummaryStoreMockData) AddToSaveOrUpdate(txn models.WalletTxn, err error) {
+	m.saveOrUpdate.Params.WalletTxn = txn
 	m.saveOrUpdate.Returns.Err = err
 }
 
@@ -76,11 +76,11 @@ type summaryMockPostgres struct {
 
 // SaveOrUpdate saves a new entry or makes changes to an existing one. If there is no
 // entry for the specified data and time, create a entry by adding the most recent balance
-// to the provided balance. If not, update the current entry by adding the provided balance
+// to the provided amount. If not, update the current entry by adding the provided amount
 // to the balance already present in that specific entry.
-func (s *summaryMockPostgres) SaveOrUpdate(entry models.WalletEntry) (err error) {
-	expected := s.mockData.saveOrUpdate.Params.WalletEntry
-	if expected.Balance == entry.Balance && expected.DateTime.Equal(entry.DateTime) {
+func (s *summaryMockPostgres) SaveOrUpdate(txn models.WalletTxn) (err error) {
+	expected := s.mockData.saveOrUpdate.Params.WalletTxn
+	if expected.Amount == txn.Amount && expected.DateTime.Equal(txn.DateTime) {
 		return s.mockData.saveOrUpdate.Returns.Err
 	}
 	return ErrMismatch
