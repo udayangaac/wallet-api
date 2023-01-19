@@ -31,7 +31,8 @@ var postgresFlags = struct {
 	User:        cfgloader.LookupEnv("POSTGRES_USER", "xcore"),
 	Password:    cfgloader.LookupEnv("POSTGRES_PASS", "corex"),
 	DB:          cfgloader.LookupEnv("POSTGRES_DB", "xcore_main"),
-	AutoMigrate: cfgloader.LookupEnv("AUTO_MIGRATE", "Y"),
+	LogLevel:    cfgloader.LookupEnv("POSTGRES_LOGLEVEL", "4"),
+	AutoMigrate: cfgloader.LookupEnv("POSTGRES_AUTOMIGRATE", "Y"),
 }
 
 type pgDBConnector struct {
