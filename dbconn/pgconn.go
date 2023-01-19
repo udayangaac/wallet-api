@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// postgresFlags environ
+// postgresFlags environment variables related to the postgres DB.
 var postgresFlags = struct {
 	Host     string
 	Port     string

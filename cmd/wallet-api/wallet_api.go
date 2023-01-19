@@ -13,7 +13,8 @@ var port = kingpin.Flag("port", "Http server port.").Short('p').Default("8081").
 
 func main() {
 
-	os.Setenv("TZ", "UTC")
+	kingpin.Parse()
+
 	osSignal := make(chan os.Signal, 1)
 	signal.Notify(osSignal, syscall.SIGINT, syscall.SIGTERM)
 
