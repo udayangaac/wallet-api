@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    ports:
+      - 8081:8081
+    command: ./bin/wallet-api --port=8081
+    env_file:
+      - .env
+    links:
+      - db
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+      - POSTGRES_USER=${POSTGRES_USER}
+volumes:
+  postgres-db:

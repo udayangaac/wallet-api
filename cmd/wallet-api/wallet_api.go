@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -18,7 +19,11 @@ func main() {
 	osSignal := make(chan os.Signal, 1)
 	signal.Notify(osSignal, syscall.SIGINT, syscall.SIGTERM)
 
-	restapi.ConfigureAPI(*port)
+	err := restapi.ConfigureAPI(*port)
+	if err != nil {
+		log.Printf("Unable to start Wallet API: %s", err)
+		os.Exit(2)
+	}
 
 	<-osSignal
 }
