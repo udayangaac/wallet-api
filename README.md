@@ -39,7 +39,7 @@ go build -o bin/wallet-api cmd/wallet-api/wallet_api.go
 
 Please run the below command to run via docker.  
 __Note:__
-- docker runtime should be installed, up and running in the Host computer
+- Docker runtime should be installed, up and running in the Host computer
 - Postgres Database has been integrated with same container and do not need to configure it separately.
 
 ```docker
