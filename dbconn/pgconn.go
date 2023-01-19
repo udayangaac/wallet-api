@@ -19,10 +19,11 @@ var postgresFlags = struct {
 	User     string
 	Password string
 	DB       string
-	// 1 : silent log level,
-	// 2 : error log level
-	// 3 : warn log level
-	// 4 : info log level
+	// Numbers and its' log level
+	// 1 = silent log level
+	// 2 = error log level
+	// 3 = warn log level
+	// 4 = info log level
 	LogLevel    string
 	AutoMigrate string // Y or y for enable the auto migrate.
 }{
@@ -63,7 +64,7 @@ func NewPGConnecter() (DBConnector, error) {
 	return &pgDBConnector{db: db}, nil
 }
 
-// AddEntities add entities to the database
+// AddEntities add entities to the database.
 func (c *pgDBConnector) AddEntities(entities ...interface{}) error {
 	if strings.ToLower(postgresFlags.AutoMigrate) == "y" {
 		return c.db.AutoMigrate(entities...)
