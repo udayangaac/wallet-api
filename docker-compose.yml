@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+      - POSTGRES_USER=${POSTGRES_USER}
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  api:
+    build: .
+    ports:
+      - 8081:8081
+    command: ./bin/wallet-api --port=8081
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+ 
+volumes:
+  postgres-db:
