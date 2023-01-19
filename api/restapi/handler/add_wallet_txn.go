@@ -1,5 +1,5 @@
-// Package models contain all http handlers.
-package handlers
+// Package handler contains all http handlers.
+package handler
 
 import (
 	"net/http"
@@ -15,10 +15,12 @@ func GetAddWalletTxn(s usecase.Summarizer) gin.HandlerFunc {
 		params, err := operation.NewAddWalletTxnParams(ctx)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, operation.NewErrorResponse(err))
+			return
 		}
 
 		if err = s.Save(params.Body.ToWalletTxn()); err != nil {
-			ctx.JSON(http.StatusInternalServerError, operation.NewErrorResponse(err))
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
 		}
 
 		ctx.JSON(http.StatusOK, operation.NewSuccessResponse("Save succeeded"))

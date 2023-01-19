@@ -16,11 +16,6 @@ func NewAddWalletTxnParams(ctx *gin.Context) (AddWalletTxnParams, error) {
 	}, err
 }
 
-// AddWalletTxnParams request parameters of save wallet request.
-type AddWalletTxnParams struct {
-	Body *AddWalletTxnBody
-}
-
 // AddWalletTxnBody request body of add transaction to wallet request.
 type AddWalletTxnBody struct {
 	DateTime time.Time `json:"datetime"`
@@ -33,4 +28,9 @@ func (s AddWalletTxnBody) ToWalletTxn() models.WalletTxn {
 		DateTime: s.DateTime,
 		Amount:   s.Amount,
 	}
+}
+
+// AddWalletTxnParams request parameters of save wallet request.
+type AddWalletTxnParams struct {
+	Body *AddWalletTxnBody
 }
