@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/udayangaac/wallet-api/config"
+	"github.com/udayangaac/wallet-api/cfgloader"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -26,12 +26,12 @@ var postgresFlags = struct {
 	LogLevel    string
 	AutoMigrate string // Y or y for enable the auto migrate.
 }{
-	Host:        config.LookupEnv("POSTGRES_HOST", "localhost"),
-	Port:        config.LookupEnv("POSTGRES_PORT", "5432"),
-	User:        config.LookupEnv("POSTGRES_USER", "xcore"),
-	Password:    config.LookupEnv("POSTGRES_PASS", "corex"),
-	DB:          config.LookupEnv("POSTGRES_DB", "xcore_main"),
-	AutoMigrate: config.LookupEnv("AUTO_MIGRATE", "Y"),
+	Host:        cfgloader.LookupEnv("POSTGRES_HOST", "localhost"),
+	Port:        cfgloader.LookupEnv("POSTGRES_PORT", "5432"),
+	User:        cfgloader.LookupEnv("POSTGRES_USER", "xcore"),
+	Password:    cfgloader.LookupEnv("POSTGRES_PASS", "corex"),
+	DB:          cfgloader.LookupEnv("POSTGRES_DB", "xcore_main"),
+	AutoMigrate: cfgloader.LookupEnv("AUTO_MIGRATE", "Y"),
 }
 
 type pgDBConnector struct {
