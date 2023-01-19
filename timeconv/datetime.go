@@ -48,7 +48,7 @@ func GetNextHour(t time.Time) time.Time {
 	timeStr := ""
 	sec := t.Minute()*60 + t.Second()
 
-	if sec < 3600 {
+	if sec > 0 && sec < 3600 {
 		timeStr = hourStr + "00:00" + zoneStr
 		t, _ = time.Parse(time.RFC3339, timeStr)
 		t = t.Add(1 * time.Hour)

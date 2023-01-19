@@ -76,9 +76,17 @@ func TestSummarizer_Save(t *testing.T) {
 
 func TestSummarizer_GetHistory(t *testing.T) {
 
-	t1, _ := time.Parse(time.RFC3339, "2006-01-02T15:04:05+07:00")
-	t1Converted := timeconv.GetNextHalfHour(t1)
-	t2Converted := t1Converted.Add(60 * time.Minute)
+	from, _ := time.Parse(time.RFC3339, "2006-01-02T09:01:05+00:00")
+	to, _ := time.Parse(time.RFC3339, "2006-01-02T11:00:05+00:00")
+
+	fromMock, _ := time.Parse(time.RFC3339, "2006-01-02T09:30:00+00:00")
+	toMock, _ := time.Parse(time.RFC3339, "2006-01-02T11:30:00+00:00")
+
+	t1, _ := time.Parse(time.RFC3339, "2006-01-02T10:00:00+00:00")
+	t2, _ := time.Parse(time.RFC3339, "2006-01-02T10:30:00+00:00")
+
+	t1Exp, _ := time.Parse(time.RFC3339, "2006-01-02T10:00:00Z")
+	t2Exp, _ := time.Parse(time.RFC3339, "2006-01-02T11:00:00Z")
 
 	dummyErr := errors.New("dummy error")
 
@@ -90,58 +98,69 @@ func TestSummarizer_GetHistory(t *testing.T) {
 		MockParams           wallet.FilterParams
 	}{
 		{
-			From: t1Converted,
-			To:   t2Converted,
+			From: from,
+			To:   to,
 			MockParams: wallet.FilterParams{
-				From: t1Converted,
-				To:   t2Converted,
+				From: fromMock,
+				To:   toMock,
 			},
 
 			MockEntries: []models.WalletEntry{
 				{
-					DateTime: t1Converted,
+					DateTime: t1,
 					Balance:  20.00,
 				},
 				{
-					DateTime: t2Converted,
+					DateTime: t2,
 					Balance:  35.00,
 				},
 			},
 
 			ExpectedEntries: []models.WalletEntry{
 				{
-					DateTime: t1Converted,
+					DateTime: t1Exp,
+					Balance:  20.00,
+				},
+				{
+					DateTime: t2Exp,
 					Balance:  35.00,
 				},
 			},
-		}, {
-			From: t1Converted,
-			To:   t2Converted,
+		},
+		{
+			From: from,
+			To:   to,
 			MockParams: wallet.FilterParams{
-				From: t1Converted,
-				To:   t2Converted,
+				From: fromMock,
+				To:   toMock,
 			},
 
 			MockEntries: []models.WalletEntry{
 				{
-					DateTime: t1Converted,
+					DateTime: t1,
 					Balance:  20.00,
 				},
 			},
 
 			ExpectedEntries: []models.WalletEntry{
 				{
-					DateTime: t1Converted,
+					DateTime: t1Exp,
+					Balance:  20.00,
+				},
+				{
+					DateTime: t2Exp,
 					Balance:  20.00,
 				},
 			},
-		}, {
-			From: t1Converted,
-			To:   t2Converted,
+		},
+		{
+			From: from,
+			To:   to,
 			MockParams: wallet.FilterParams{
-				From: t1Converted,
-				To:   t2Converted,
+				From: fromMock,
+				To:   toMock,
 			},
+
 			ExpectedErr: dummyErr,
 			MockErr:     dummyErr,
 		},
