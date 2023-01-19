@@ -1,6 +1,9 @@
 # wallet-api
-wallet-api tracks wallet's changes and shows a history of wallet’s wealth to everyone.
 
+
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/udayangaac/wallet-api/tree/main.svg?style=svg&circle-token=af27c8c67844c384ef4abb4f7c3dd42eb4a6323c)](https://dl.circleci.com/status-badge/redirect/gh/udayangaac/wallet-api/tree/main)
+
+wallet-api tracks wallet's changes and shows a history of wallet’s wealth to everyone.
 
 ## Getting Started
 
