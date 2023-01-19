@@ -26,11 +26,11 @@ var postgresFlags = struct {
 	LogLevel    string
 	AutoMigrate string // Y or y for enable the auto migrate.
 }{
-	Host:        cfgloader.LookupEnv("POSTGRES_HOST", "localhost"),
+	Host:        cfgloader.LookupEnv("POSTGRES_HOST", "127.0.0.1"),
 	Port:        cfgloader.LookupEnv("POSTGRES_PORT", "5432"),
-	User:        cfgloader.LookupEnv("POSTGRES_USER", "xcore"),
-	Password:    cfgloader.LookupEnv("POSTGRES_PASS", "corex"),
-	DB:          cfgloader.LookupEnv("POSTGRES_DB", "xcore_main"),
+	User:        cfgloader.LookupEnv("POSTGRES_USER", "walletapiuser"),
+	Password:    cfgloader.LookupEnv("POSTGRES_PASS", "walletapipwd"),
+	DB:          cfgloader.LookupEnv("POSTGRES_DB", "walletapidb"),
 	LogLevel:    cfgloader.LookupEnv("POSTGRES_LOGLEVEL", "4"),
 	AutoMigrate: cfgloader.LookupEnv("POSTGRES_AUTOMIGRATE", "Y"),
 }

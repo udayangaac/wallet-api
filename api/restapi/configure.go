@@ -19,7 +19,7 @@ func ConfigureAPI(port int) error {
 		return err
 	}
 
-	dbConn.AddEntities(entity.Summary{})
+	dbConn.AddEntities(&entity.Summary{})
 
 	if err != nil {
 		panic(err)
