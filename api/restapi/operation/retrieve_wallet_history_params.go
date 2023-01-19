@@ -16,6 +16,10 @@ var (
 	// ErrInvalidEndDatetime an error which will be returned
 	// when date time format is invalid.
 	ErrInvalidEndDatetime = errors.New("invalid endDatetime")
+
+	// ErrDifferentTimeZone an error which will be returned
+	// when time zones are different.
+	ErrDifferentTimeZone = errors.New("different timezones")
 )
 
 // RetrieveWalletHistoryParams request body of save wallet request.
@@ -26,15 +30,27 @@ type RetrieveWalletHistoryParams struct {
 
 // Validate validates the wallet history params.
 func (a RetrieveWalletHistoryParams) Validate() error {
+
 	if a.StartDatetime.IsZero() && a.EndDatetime.IsZero() {
 		return fmt.Errorf("%s and %s", ErrInvalidStartDatetime, ErrInvalidEndDatetime)
-	} else if a.StartDatetime.IsZero() {
-		return ErrInvalidStartDatetime
-	} else if a.EndDatetime.IsZero() {
-		return ErrInvalidEndDatetime
-	} else {
-		return nil
 	}
+
+	if a.StartDatetime.IsZero() {
+		return ErrInvalidStartDatetime
+	}
+
+	if a.EndDatetime.IsZero() {
+		return ErrInvalidEndDatetime
+	}
+
+	_, offsetEnd := a.EndDatetime.Zone()
+	_, offsetStart := a.StartDatetime.Zone()
+
+	if offsetEnd != offsetStart {
+		return ErrDifferentTimeZone
+	}
+
+	return nil
 }
 
 // NewRetrieveWalletHistoryParams extract retrieve wallet history parameter from the request.

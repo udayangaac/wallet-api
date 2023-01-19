@@ -22,6 +22,7 @@ func GetRetrieveWalletHistory(s usecase.Summarizer) gin.HandlerFunc {
 			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-		ctx.JSON(http.StatusOK, entries)
+		resp := operation.NewRetrieveWalletHistoryResp(params.EndDatetime.Location(), entries)
+		ctx.JSON(http.StatusOK, resp)
 	}
 }
