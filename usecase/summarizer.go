@@ -34,52 +34,67 @@ func (w *Summarizer) Save(txn models.WalletTxn) error {
 
 // GetHistory returns a history wallet balance at the end of each defined time periods between two date times.
 func (w *Summarizer) GetHistory(from, to time.Time) ([]models.WalletEntry, error) {
-
-	from = timeconv.GetNextHalfHour(from)
-
-	to = timeconv.GetNextHalfHour(to)
-
 	entries := make([]models.WalletEntry, 0)
 
-	params := wallet.FilterParams{
-		From: from,
-		To:   to,
-	}
+	params := wallet.FilterParams{From: timeconv.GetNextHalfHour(from), To: timeconv.GetNextHalfHour(to)}
 
 	dbEntries, err := w.store.GetAll(params)
 	if err != nil {
 		return nil, err
 	}
 
-	numOfEntryPerRecord := int(models.PeriodOfWalletHistory / minPeriod)
+	// create an temporarily map contains database records.
+	tmpMap := make(map[string]models.WalletEntry)
+	for _, entry := range dbEntries {
+		tmpMap[timeconv.ToString(entry.DateTime)] = entry
+	}
 
-	for i := 0; i < len(dbEntries); {
+	nextHr := timeconv.GetNextHour(from)
 
-		tmp := models.WalletEntry{}
-		idx := i
+	// Need to convert hover to same time zone.
+	// Otherwise it is not possible to check the map with different time zones.
+	nextHr = nextHr.UTC()
 
-		for j := 0; j < numOfEntryPerRecord; j++ {
-			if i >= len(dbEntries) {
-				break
-			}
+	// forwardBal is the balance which we need to
+	// consider in the next hour which has no records.
+	forwardBal := float32(0)
 
-			if tmp.DateTime.IsZero() {
-				tmp = dbEntries[idx+j]
-			} else {
-				tmp.Balance = dbEntries[idx+j].Balance
-			}
+	entry, errLast := w.store.GetLast(nextHr)
+	if errLast == nil {
+		forwardBal = entry.Balance
+	}
 
-			i++
+	n := int(to.Sub(from).Hours())
+	for i := 0; i <= n; i++ {
+
+		we := models.WalletEntry{
+			DateTime: nextHr,
+			Balance:  forwardBal,
 		}
 
-		entries = append(entries, tmp)
+		entry, ok := tmpMap[timeconv.ToString(nextHr)]
+		if ok {
+			forwardBal = entry.Balance
+			we.Balance = entry.Balance
+		} else {
+			preBin := timeconv.SubHalfHour(nextHr)
+			entry, ok = tmpMap[timeconv.ToString(preBin)]
+			if ok {
+				forwardBal = entry.Balance
+				we.Balance = entry.Balance
+			}
+		}
+
+		entries = append(entries, we)
+		nextHr = nextHr.Add(time.Hour * 1)
 	}
+
 	return entries, nil
 }
 
 // GetLatestBalance returns the latest balance.
 func (w *Summarizer) GetLatestBalance() (float32, error) {
-	entry, err := w.store.GetLast()
+	entry, err := w.store.GetLast(time.Now())
 	if err != nil {
 		return 0, err
 	}

@@ -3,6 +3,7 @@ package wallet
 
 import (
 	"errors"
+	"time"
 
 	"github.com/udayangaac/wallet-api/models"
 )
@@ -95,7 +96,7 @@ func (s *summaryMockPostgres) GetAll(params FilterParams) (entries []models.Wall
 	return []models.WalletEntry{}, ErrMismatch
 }
 
-// GetLast retrieve the last inserted wallet entry.
-func (s *summaryMockPostgres) GetLast() (entry models.WalletEntry, err error) {
+// GetLast retrieve the last inserted wallet entry before given time.
+func (s *summaryMockPostgres) GetLast(t time.Time) (entry models.WalletEntry, err error) {
 	return s.mockData.getLast.Returns.Entry, s.mockData.getLast.Returns.Err
 }

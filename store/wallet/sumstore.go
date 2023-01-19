@@ -26,6 +26,6 @@ type SummaryStore interface {
 	// GetAll retrieves all wallet entries filtered given filters parameters.
 	GetAll(params FilterParams) (entries []models.WalletEntry, err error)
 
-	// GetLast retrieve the last inserted wallet entry.
-	GetLast() (entry models.WalletEntry, err error)
+	// GetLast retrieve the last inserted wallet entry before given time.
+	GetLast(t time.Time) (entry models.WalletEntry, err error)
 }
